@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package pl.edu.pwr.rsi.grpc.interface;
+
+option java_multiple_files = true;
+option java_package = "pl.edu.pwr.rsi.grpc.interfaces.lib";
+option java_outer_classname = "HelloWorldProto";
+
+// definicja serwisu
+service MyService {
+
+    // metoda testowa do sprawdzenia polaczenia miedzy serwerem a klientem
+    rpc SayHello (SimpleRequest) returns (SimpleReply) { }
+
+    // metoda pomocnicza do wyswietlania * na kliencie
+    rpc RecordsCount (EmptyRequest) returns (CountReply) { }
+
+    // metoda do synchronicznego wgrywania danych
+    rpc Upload (UploadRequest) returns (SimpleReply) { }
+
+    // metoda do synchronicznego czytania danych
+    rpc Read (SimpleRequest) returns (SimpleReply) { }
+
+    // metoda do asynchronicznego czytania danych
+    rpc ReadAsync (EmptyRequest) returns (SimpleReply) { }
+
+    // metoda do strumieniowego wgrywania danych
+    rpc StreamUpload (stream UploadRequest) returns (SimpleReply) { }
+
+    // metoda do strumieniowego czytania danych
+    rpc StreamRead (EmptyRequest) returns (stream SimpleReply) { }
+
+    // metoda do wgrania obrazka na serwer
+    rpc UploadImage (UploadImageRequest) returns (SimpleReply) { }
+
+    // metoda do pobrania obrazka z serwera
+    rpc ReadImage (EmptyRequest) returns (ReadImageReply) { }
+}
+
+// pola wiadomosci musza miec wartosc ktora identyfikuje je w binarnym formacie
+
+// podstawowe zgloszenie klienta do serwera
+message SimpleRequest {
+    string name = 1;
+}
+
+// podstawowa odpowiedz serwera na zgloszenie klienta
+message SimpleReply {
+    string message = 1;
+}
+
+// do metody Upload - zgloszenie klienta do serwera
+message UploadRequest {
+    int32 pokemonId = 1;
+    string pokemonName = 2;
+    float pokemonWeight = 3;
+    int32 pokemonGeneration = 4;
+}
+
+// do metody UploadImage - zgloszenie klienta do serwera
+message UploadImageRequest {
+    bytes image = 1;
+}
+
+// do metody ReadImage - odpowiedz serwera na zgloszenie klienta
+message ReadImageReply {
+    bytes image = 1;
+    string message = 2;
+}
+
+// do metod ReadImage i StreamRead
+message EmptyRequest { }
+
+// do metody RecordsCount
+message CountReply {
+    int32 count = 1;
+}
